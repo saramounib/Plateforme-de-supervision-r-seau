@@ -1,0 +1,294 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>
+        {% block title %}SD-WAN Supervision{% endblock %}
+    </title>
+
+
+    <!-- Bootstrap Morph -->
+    <link rel="stylesheet"
+          href="{% static 'base/css/bootstrap.min.css' %}">
+
+
+    <!-- Leaflet -->
+    <link rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+
+    <!-- Icônes Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+
+    <style>
+
+        body {
+            min-height: 100vh;
+            background-color: #f8f9fa;
+        }
+
+        .page-content {
+            min-height: 100vh;
+        }
+
+        .card {
+            border-radius: 12px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+        }
+
+        .navbar .nav-link i {
+            margin-right: 5px;
+        }
+
+    </style>
+
+
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+<!-- ================================================= -->
+<!-- NAVBAR SD-WAN -->
+<!-- ================================================= -->
+
+<nav class="navbar navbar-expand-lg bg-primary"
+     data-bs-theme="dark">
+
+    <div class="container-fluid">
+
+
+        <!-- NOM DU PROJET -->
+        <a class="navbar-brand"
+           href="{% url 'dashboard' %}">
+
+           
+            SD-WAN Supervision
+
+        </a>
+
+
+        <!-- BOUTON MOBILE -->
+        <button class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSDWAN"
+                aria-controls="navbarSDWAN"
+                aria-expanded="false"
+                aria-label="Ouvrir le menu">
+
+            <span class="navbar-toggler-icon"></span>
+
+        </button>
+
+
+        <!-- MENU -->
+        <div class="collapse navbar-collapse"
+             id="navbarSDWAN">
+
+
+            <ul class="navbar-nav me-auto">
+
+
+                <!-- TABLEAU DE BORD -->
+                <li class="nav-item">
+
+                    <a class="nav-link active"
+                       href="{% url 'dashboard' %}">
+
+                        <i class="bi bi-grid"></i>
+                        Tableau de bord
+
+                    </a>
+                   
+                </li>
+
+
+                <!-- AGENCES -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'agences' %}">
+
+                        <i class="bi bi-building"></i>
+                        Agences
+
+                    </a>
+
+                </li>
+
+
+                <!-- CARTE RESEAU -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'carte_reseau' %}">
+
+                        <i class="bi bi-map"></i>
+                        Carte réseau
+
+                    </a>
+
+                </li>
+
+
+                <!-- PERFORMANCES -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'performances' %}">
+
+                        <i class="bi bi-activity"></i>
+                        Performances
+
+                    </a>
+
+                </li>
+
+
+                <!-- KPI -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'kpi' %}">
+
+                        <i class="bi bi-bar-chart"></i>
+                        KPI
+
+                    </a>
+
+                </li>
+
+
+                <!-- ALERTES -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'alertes' %}">
+
+                        <i class="bi bi-bell"></i>
+                        Alertes
+
+                    </a>
+
+                </li>
+
+
+                <!-- HISTORIQUE -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'historique' %}">
+
+                        <i class="bi bi-clock-history"></i>
+                        Historique
+
+                    </a>
+
+                </li>
+
+
+                <!-- RAPPORTS -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'rapports' %}">
+
+                        <i class="bi bi-file-text"></i>
+                        Rapports
+
+                    </a>
+
+                </li>
+
+
+                <!-- PROFIL -->
+                <li class="nav-item">
+
+                    <a class="nav-link"
+                       href="{% url 'profil' %}">
+
+                        <i class="bi bi-person"></i>
+                        Profil
+
+                    </a>
+
+                </li>
+                <li class="nav-item"></li>
+                     <a href="{% url 'logout' %}" class="nav-link text-danger">
+                    <i class="bi bi-box-arrow-right"></i>
+                    Déconnexion
+                    </a>
+                </li>    
+            </ul>
+
+
+            <!-- BOUTON ACTUALISER -->
+            <form class="d-flex">
+
+                <button class="btn btn-secondary"
+                        type="button"
+                        onclick="location.reload()">
+
+                    <i class="bi bi-arrow-clockwise"></i>
+                    Actualiser
+
+                </button>
+
+            </form>
+
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- ================================================= -->
+<!-- CONTENU DES PAGES -->
+<!-- ================================================= -->
+
+<div class="page-content">
+
+    {% block content %}
+    {% endblock %}
+
+</div>
+
+
+<!-- Bootstrap JS -->
+<script src="{% static 'base/js/bootstrap.bundle.min.js' %}"></script>
+
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+
+{% block extra_js %}
+{% endblock %}
+
+
+</body>
+
+</html>

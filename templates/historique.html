@@ -1,0 +1,128 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Historique - SD-WAN{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- En-tête -->
+    <div class="mb-4">
+        <h2 class="fw-bold">Historique des alertes</h2>
+        <p class="text-muted mb-0">
+            Historique des anomalies et événements détectés sur le réseau SD-WAN
+        </p>
+    </div>
+
+
+    <!-- Historique -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-4">
+                Événements réseau
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Agence</th>
+                            <th>Type d'alerte</th>
+                            <th>Sévérité</th>
+                            <th>Statut</th>
+                            <th>Date de création</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for alerte in alertes %}
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                {{ alerte.agence.nom }}
+                            </td>
+
+                            <td>
+                                {{ alerte.type_alerte }}
+                            </td>
+
+                            <td>
+
+                                {% if alerte.severite == "Haute" %}
+
+                                    <span class="badge bg-danger">
+                                        Haute
+                                    </span>
+
+                                {% elif alerte.severite == "Moyenne" %}
+
+                                    <span class="badge bg-warning text-dark">
+                                        Moyenne
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ alerte.severite }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+
+                                {% if alerte.statut == "Ouverte" %}
+
+                                    <span class="badge bg-danger">
+                                        Ouverte
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-success">
+                                        Résolue
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                            <td>
+                                {{ alerte.date_creation|date:"d/m/Y H:i" }}
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="5"
+                                class="text-center text-muted py-4">
+
+                                Aucun événement enregistré.
+
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

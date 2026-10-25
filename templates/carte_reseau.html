@@ -1,0 +1,216 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Carte réseau - SD-WAN{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Carte réseau - SD-WAN</title>
+
+    <!-- Leaflet -->
+    <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    >
+
+    <style>
+
+        body {
+            margin: 0;
+            background-color: #f5f7fa;
+            font-family: Arial, sans-serif;
+        }
+
+        /* CONTENU PRINCIPAL */
+        .page {
+            padding: 30px;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .header h1 {
+            margin: 0;
+            color: #102a43;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #627d98;
+            margin-top: 8px;
+            margin-bottom: 0;
+            font-size: 15px;
+        }
+
+        /* CARTE */
+        .map-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .map-title {
+            color: #102a43;
+            font-size: 19px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* BOUTON */
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            background-color: #102a43;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .back:hover {
+            background-color: #243b53;
+            color: white;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div class="page">
+
+        <!-- HEADER -->
+        <div class="header">
+
+            <h1>🗺️ Carte réseau SD-WAN</h1>
+
+            <p>
+                Visualisation des agences et des connexions SD-WAN.
+            </p>
+
+        </div>
+
+
+        <!-- CARTE -->
+        <div class="map-card">
+
+            <div class="map-title">
+                Localisation des agences
+            </div>
+
+            <div id="map"></div>
+
+            <a href="{% url 'dashboard' %}" class="back">
+                ← Retour au tableau de bord
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- Leaflet JS -->
+    <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+    </script>
+
+
+    <script>
+
+        // Création de la carte centrée sur le Maroc
+        const map = L.map('map').setView([31.7917, -7.0926], 6);
+
+
+        // Fond de carte
+        L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    {
+        attribution: "Tiles © Esri"
+    }
+).addTo(map);
+
+
+        // Agences récupérées depuis Django
+        const agences = [
+
+            {% for agence in agences %}
+
+            {
+                nom: "{{ agence.nom }}",
+                ville: "{{ agence.ville }}",
+                latitude: {{ agence.latitude }},
+                longitude: {{ agence.longitude }},
+                statut: "{{ agence.statut }}",
+                latence: {{ agence.latence }},
+                perte: {{ agence.perte_paquets }}
+            },
+
+            {% endfor %}
+
+        ];
+
+
+        // Affichage des agences
+        agences.forEach(function(agence) {
+
+            const marker = L.marker([
+                agence.latitude,
+                agence.longitude
+            ]).addTo(map);
+
+
+            marker.bindPopup(`
+
+                <strong>${agence.nom}</strong><br>
+
+                Ville : ${agence.ville}<br>
+
+                Statut : ${agence.statut}<br>
+
+                Latence : ${agence.latence} ms<br>
+
+                Perte de paquets : ${agence.perte} %
+
+            `);
+
+        });
+
+
+        // Correction de l'affichage de la carte
+        setTimeout(function() {
+
+            map.invalidateSize(true);
+
+        }, 500);
+
+    </script>
+
+</body>
+
+</html>
+
+{% endblock %}

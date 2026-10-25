@@ -1,0 +1,519 @@
+{% extends "base/base.html" %}
+
+{% block title %}Agences - SD-WAN{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- ========================= -->
+    <!-- EN-TÊTE -->
+    <!-- ========================= -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+            <h2 class="fw-bold mb-1">
+                <i class="bi bi-building"></i>
+                Supervision des agences
+            </h2>
+
+            <p class="text-muted mb-0">
+                État et performances des agences du réseau SD-WAN
+            </p>
+        </div>
+
+        <div>
+            <span class="badge bg-primary fs-6 px-3 py-2">
+               
+                Réseau SD-WAN
+            </span>
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- BARRE DE RECHERCHE -->
+    <!-- ========================= -->
+
+    <div class="card shadow-sm border-0 mb-4">
+
+        <div class="card-body">
+
+            <div class="row align-items-center">
+
+                <div class="col-md-8">
+
+                    <div class="input-group">
+
+                        <span class="input-group-text bg-white">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input
+                            type="text"
+                            id="searchAgence"
+                            class="form-control"
+                            placeholder="Rechercher une agence..."
+                        >
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                    <span class="text-muted">
+                        <i class="bi bi-building"></i>
+                        {{ total_agences }} agence(s)
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- KPI -->
+    <!-- ========================= -->
+
+    <div class="row g-4 mb-4">
+
+        <!-- TOTAL -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Total agences
+                            </p>
+
+                            <h2 class="fw-bold mb-0">
+                                {{ total_agences }}
+                            </h2>
+                        </div>
+
+                        <div class="bg-primary bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-buildings fs-3 text-primary"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- EN LIGNE -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                En ligne
+                            </p>
+
+                            <h2 class="fw-bold text-success mb-0">
+                                {{ agences_en_ligne }}
+                            </h2>
+                        </div>
+
+                        <div class="bg-success bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-check-circle fs-3 text-success"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ANOMALIES -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Anomalies
+                            </p>
+
+                            <h2 class="fw-bold text-danger mb-0">
+                                {{ agences_anomalie }}
+                            </h2>
+                        </div>
+
+                        <div class="bg-danger bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-exclamation-triangle fs-3 text-danger"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DISPONIBILITÉ -->
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card shadow-sm border-0 h-100">
+
+                <div class="card-body">
+
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">
+                                Disponibilité
+                            </p>
+
+                            <h2 class="fw-bold text-info mb-0">
+                                {{ disponibilite }} %
+                            </h2>
+                        </div>
+
+                        <div class="bg-info bg-opacity-10 rounded-circle p-3">
+                            <i class="bi bi-activity fs-3 text-info"></i>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- TABLEAU DES AGENCES -->
+    <!-- ========================= -->
+
+    <div class="card shadow-sm border-0">
+
+        <div class="card-header bg-white border-0 py-3">
+
+            <div class="d-flex justify-content-between align-items-center">
+
+                <h5 class="fw-bold mb-0">
+                    <i class="bi bi-list-ul"></i>
+                    Liste des agences
+                </h5>
+
+                <span class="text-muted small">
+                    Données de supervision
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+            <div class="table-responsive">
+
+                <table
+                    class="table table-hover align-middle mb-0"
+                    id="tableAgences"
+                >
+
+                    <thead class="table-light">
+
+                        <tr>
+
+                            <th class="px-4">
+                                Agence
+                            </th>
+
+                            <th>
+                                Ville
+                            </th>
+
+                            <th>
+                                Statut
+                            </th>
+
+                            <th>
+                                Latence
+                            </th>
+
+                            <th>
+                                Perte de paquets
+                            </th>
+
+                            <th>
+                                Bande passante
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for agence in agences %}
+
+                        <tr>
+
+                            <!-- NOM -->
+                            <td class="px-4">
+
+                                <div class="d-flex align-items-center">
+
+                                    <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
+
+                                        <i class="bi bi-building text-primary"></i>
+
+                                    </div>
+
+                                    <div>
+
+                                        <div class="fw-semibold">
+                                            {{ agence.nom }}
+                                        </div>
+
+                                        <small class="text-muted">
+                                            ID : {{ agence.id }}
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            </td>
+
+
+                            <!-- VILLE -->
+                            <td>
+
+                                <i class="bi bi-geo-alt text-muted"></i>
+
+                                {{ agence.ville }}
+
+                            </td>
+
+
+                            <!-- STATUT -->
+                            <td>
+
+                                {% if agence.statut == "En ligne" %}
+
+                                    <span class="badge bg-success">
+                                        <i class="bi bi-check-circle"></i>
+                                        En ligne
+                                    </span>
+
+                                {% elif agence.statut == "Anomalie" %}
+
+                                    <span class="badge bg-danger">
+                                        <i class="bi bi-exclamation-triangle"></i>
+                                        Anomalie
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-secondary">
+                                        {{ agence.statut }}
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- LATENCE -->
+                            <td>
+
+                                {% if agence.latence > 100 %}
+
+                                    <span class="text-danger fw-semibold">
+                                        {{ agence.latence }} ms
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-success">
+                                        {{ agence.latence }} ms
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- PERTE -->
+                            <td>
+
+                                {% if agence.perte_paquets > 2 %}
+
+                                    <span class="text-danger fw-semibold">
+                                        {{ agence.perte_paquets }} %
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="text-success">
+                                        {{ agence.perte_paquets }} %
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+
+                            <!-- BANDE PASSANTE -->
+                            <td>
+
+                                <span class="fw-semibold">
+                                    {{ agence.bande_passante }}
+                                </span>
+
+                                <small class="text-muted">
+                                    Mbps
+                                </small>
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="text-center py-5"
+                            >
+
+                                <i class="bi bi-building-x fs-1 text-muted"></i>
+
+                                <p class="text-muted mt-3 mb-0">
+                                    Aucune agence trouvée.
+                                </p>
+
+                            </td>
+
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- INFORMATION -->
+    <!-- ========================= -->
+
+    <div class="alert alert-light border mt-4">
+
+        <div class="d-flex align-items-start">
+
+            <i class="bi bi-info-circle text-primary fs-4 me-3"></i>
+
+            <div>
+
+                <strong>Supervision automatique</strong>
+
+                <p class="mb-0 text-muted small">
+                    Une agence est considérée en anomalie lorsque
+                    sa latence dépasse 100 ms ou lorsque la perte de
+                    paquets dépasse 2 %.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- RECHERCHE JAVASCRIPT -->
+<!-- ========================= -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchInput = document.getElementById("searchAgence");
+    const table = document.getElementById("tableAgences");
+
+    if (!searchInput || !table) {
+        return;
+    }
+
+    searchInput.addEventListener("keyup", function () {
+
+        const searchValue = this.value.toLowerCase();
+
+        const rows = table
+            .getElementsByTagName("tbody")[0]
+            .getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+
+            const agenceName = rows[i]
+                .getElementsByTagName("td")[0];
+
+            if (!agenceName) {
+                continue;
+            }
+
+            const text = agenceName.textContent.toLowerCase();
+
+            if (text.includes(searchValue)) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
+
+        }
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

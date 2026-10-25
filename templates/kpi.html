@@ -1,0 +1,205 @@
+{% extends 'base/base.html' %}
+
+{% block title %}KPI - SD-WAN{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- En-tête -->
+    <div class="mb-4">
+        <h2 class="fw-bold">Indicateurs de performance (KPI)</h2>
+        <p class="text-muted mb-0">
+            Vue globale des performances du réseau SD-WAN
+        </p>
+    </div>
+
+    <!-- KPI principaux -->
+    <div class="row g-4 mb-4">
+
+        <!-- Total agences -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Total des agences</h6>
+                    <h2 class="fw-bold">{{ total_agences }}</h2>
+                    <p class="text-muted mb-0">
+                        Agences supervisées
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agences en ligne -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Agences en ligne</h6>
+                    <h2 class="fw-bold text-success">
+                        {{ agences_en_ligne }}
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Sites opérationnels
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Anomalies -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Agences en anomalie</h6>
+                    <h2 class="fw-bold text-danger">
+                        {{ agences_anomalie }}
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Sites nécessitant une attention
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Performances réseau -->
+    <div class="row g-4 mb-4">
+
+        <!-- Latence -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Latence moyenne</h6>
+                    <h2 class="fw-bold">
+                        {{ moyenne_latence }} ms
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Temps moyen de réponse
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Perte de paquets -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Perte de paquets moyenne</h6>
+                    <h2 class="fw-bold">
+                        {{ moyenne_perte }} %
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Qualité des communications
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bande passante -->
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <h6 class="text-muted">Bande passante totale</h6>
+                    <h2 class="fw-bold">
+                        {{ total_bande_passante }} Mbps
+                    </h2>
+                    <p class="text-muted mb-0">
+                        Capacité réseau disponible
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- Tableau détaillé -->
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-body">
+
+            <h5 class="fw-bold mb-4">
+                Détail des indicateurs par agence
+            </h5>
+
+            <div class="table-responsive">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+                        <tr>
+                            <th>Agence</th>
+                            <th>Latence</th>
+                            <th>Perte de paquets</th>
+                            <th>Bande passante</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for agence in agences %}
+
+                        <tr>
+
+                            <td class="fw-semibold">
+                                {{ agence.nom }}
+                            </td>
+
+                            <td>
+                                {{ agence.latence }} ms
+                            </td>
+
+                            <td>
+                                {{ agence.perte_paquets }} %
+                            </td>
+
+                            <td>
+                                {{ agence.bande_passante }} Mbps
+                            </td>
+
+                            <td>
+
+                                {% if agence.statut == "En ligne" %}
+
+                                    <span class="badge bg-success">
+                                        En ligne
+                                    </span>
+
+                                {% else %}
+
+                                    <span class="badge bg-danger">
+                                        Anomalie
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="5"
+                                class="text-center text-muted">
+                                Aucune agence disponible.
+                            </td>
+                        </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

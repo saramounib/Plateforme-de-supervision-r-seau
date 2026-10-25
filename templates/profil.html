@@ -1,0 +1,215 @@
+{% extends "base/base.html" %}
+
+{% block title %}Profil - SD-WAN Supervision{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid py-4">
+
+    <!-- En-tête -->
+    <div class="mb-4">
+        <h1 class="fw-bold">👤 Mon profil</h1>
+        <p class="text-muted">
+            Informations sur l'utilisateur et la plateforme de supervision SD-WAN.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Carte profil -->
+        <div class="col-lg-4">
+
+            <div class="card shadow-sm border-0 h-100">
+                <div class="card-body text-center p-4">
+
+                    <div class="mb-3">
+                        <div
+                            class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto"
+                            style="width: 100px; height: 100px; font-size: 42px;">
+                            👤
+                        </div>
+                    </div>
+
+                    <h3 class="fw-bold mb-1">Administrateur</h3>
+
+                    <p class="text-muted mb-3">
+                        Administrateur réseau
+                    </p>
+
+                    <span class="badge bg-success">
+                        ● Compte actif
+                    </span>
+
+                    <hr class="my-4">
+
+                    <div class="text-start">
+
+                        <div class="mb-3">
+                            <small class="text-muted d-block">
+                                Nom d'utilisateur
+                            </small>
+                            <strong>Administrateur</strong>
+                        </div>
+
+                        <div class="mb-3">
+                            <small class="text-muted d-block">
+                                Rôle
+                            </small>
+                            <strong>Superviseur réseau</strong>
+                        </div>
+
+                        <div>
+                            <small class="text-muted d-block">
+                                Système
+                            </small>
+                            <strong>Plateforme SD-WAN</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- Informations -->
+        <div class="col-lg-8">
+
+            <div class="card shadow-sm border-0 mb-4">
+
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        ⚙️ Informations du compte
+                    </h5>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <div class="row g-4">
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">
+                                Nom
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="Administrateur"
+                                readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">
+                                Fonction
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="Superviseur réseau"
+                                readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">
+                                Plateforme
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="SD-WAN Supervision"
+                                readonly>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-muted">
+                                État du compte
+                            </label>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                value="Actif"
+                                readonly>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- Droits et responsabilités -->
+            <div class="card shadow-sm border-0">
+
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        🔐 Droits et responsabilités
+                    </h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row g-3">
+
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="fw-bold">
+                                    📊 Supervision
+                                </h6>
+                                <p class="text-muted mb-0">
+                                    Consulter l'état des agences et les performances du réseau.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="fw-bold">
+                                    🚨 Alertes
+                                </h6>
+                                <p class="text-muted mb-0">
+                                    Consulter et résoudre les alertes détectées.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="fw-bold">
+                                    📈 KPI
+                                </h6>
+                                <p class="text-muted mb-0">
+                                    Suivre les indicateurs de performance du réseau.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="p-3 border rounded">
+                                <h6 class="fw-bold">
+                                    📄 Rapports
+                                </h6>
+                                <p class="text-muted mb-0">
+                                    Consulter et générer les rapports de supervision.
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,934 @@
+{% extends 'base/base.html' %}
+{% block title %}Tableau de bord - SD-WAN {% endblock %}
+{% block content %}
+   
+    <style>
+        body {
+            background-color: #f5f7fa;
+        }
+
+        .sidebar {
+            min-height: 100vh;
+            background-color: #212529;
+        }
+
+        .sidebar .nav-link {
+            color: #adb5bd;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: white;
+            background-color: #343a40;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+        }
+
+        .kpi-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            font-size: 22px;
+        }
+
+        .kpi-blue {
+            background-color: #e7f1ff;
+            color: #0d6efd;
+        }
+
+        .kpi-green {
+            background-color: #e8f7ee;
+            color: #198754;
+        }
+
+        .kpi-red {
+            background-color: #fdeaea;
+            color: #dc3545;
+        }
+
+        #map {
+            height: 300px;
+            border-radius: 8px;
+            width: 100%;
+            overflow: hidden;
+
+        }
+        #map .leaflet-title {
+            max-width: none;
+        }
+        #map img 
+        .status-online {
+            color: #198754;
+            font-weight: 600;
+        }
+
+        .status-anomaly {
+            color: #dc3545;
+            font-weight: 600;
+        }
+    </style>
+
+
+
+
+
+
+<div class="container-fluid">
+
+    <div class="row">
+
+
+        <!-- ================================================= -->
+        <!-- SIDEBAR -->
+        <!-- =================================================
+
+        <aside class="col-md-3 col-lg-2 sidebar p-3">
+
+            <h5 class="text-white mb-4">
+                
+                SD-WAN 
+            </h5>
+
+
+            <nav class="nav flex-column">
+
+                <a class="nav-link active"
+                   href="{% url 'dashboard' %}">
+                    <i class="bi bi-grid"></i>
+                    Tableau de bord
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'agences' %}">
+                    <i class="bi bi-building"></i>
+                    Agences
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'carte_reseau' %}">
+                    <i class="bi bi-map"></i>
+                    Carte réseau
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'performances' %}">
+                    <i class="bi bi-activity"></i>
+                    Performances réseau
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'kpi' %}">
+                    <i class="bi bi-bar-chart"></i>
+                    KPI
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'alertes' %}">
+                    <i class="bi bi-bell"></i>
+                    Alertes
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'historique' %}">
+                    <i class="bi bi-clock-history"></i>
+                    Historique
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'rapports' %}">
+                    <i class="bi bi-file-text"></i>
+                    Rapports
+                </a>
+
+                <a class="nav-link"
+                   href="{% url 'profil' %}">
+                    <i class="bi bi-person"></i>
+                    Profil
+                </a>
+
+            </nav>
+
+        </aside>  -->
+
+
+        <!-- ================================================= -->
+        <!-- MAIN CONTENT -->
+        <!-- ================================================= -->
+
+        <main class="w-100 p-4">
+
+
+            <!-- HEADER -->
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+
+                <div>
+                    <h2 class="fw-bold mb-1">
+                        Tableau de bord
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Vue d'ensemble de votre réseau SD-WAN.
+                    </p>
+                </div>
+
+
+                <div class="d-flex align-items-center gap-3">
+
+                  
+
+
+                    <div class="d-flex align-items-center">
+
+                        <div
+                            class="bg-primary text-white rounded-circle
+                                   d-flex align-items-center justify-content-center"
+                            style="width:42px;height:42px;">
+
+                            SM
+
+                        </div>
+
+                        <div class="ms-2">
+
+                            <strong>
+                                Sara Mounib
+                            </strong>
+
+                            <small class="d-block text-muted">
+                                Administrateur
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- KPI -->
+            <!-- ================================================= -->
+
+            <div class="row g-3 mb-4">
+
+
+                <!-- TOTAL -->
+
+                <div class="col-sm-6 col-xl">
+
+                    <div class="card p-3 h-100">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="kpi-icon kpi-blue">
+                                <i class="bi bi-building"></i>
+                            </div>
+
+                            <div class="ms-3">
+
+                                <small class="text-muted">
+                                    Total agences
+                                </small>
+
+                                <h3 class="mb-0">
+                                    {{ total_agencies }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ONLINE -->
+
+                <div class="col-sm-6 col-xl">
+
+                    <div class="card p-3 h-100">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="kpi-icon kpi-green">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+
+                            <div class="ms-3">
+
+                                <small class="text-muted">
+                                    Agences en ligne
+                                </small>
+
+                                <h3 class="mb-0">
+                                    {{ online_agencies }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ANOMALIE -->
+
+                <div class="col-sm-6 col-xl">
+
+                    <div class="card p-3 h-100">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="kpi-icon kpi-red">
+                                <i class="bi bi-exclamation-triangle"></i>
+                            </div>
+
+                            <div class="ms-3">
+
+                                <small class="text-muted">
+                                    Agences en anomalie
+                                </small>
+
+                                <h3 class="mb-0">
+                                    {{ anomaly_agencies }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BANDE PASSANTE -->
+
+                <div class="col-sm-6 col-xl">
+
+                    <div class="card p-3 h-100">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="kpi-icon kpi-blue">
+                                <i class="bi bi-speedometer2"></i>
+                            </div>
+
+                            <div class="ms-3">
+
+                                <small class="text-muted">
+                                    Débit total
+                                </small>
+
+                                <h3 class="mb-0">
+                                    {{ total_bandwidth }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DISPONIBILITE -->
+
+                <div class="col-sm-6 col-xl">
+
+                    <div class="card p-3 h-100">
+
+                        <div class="d-flex align-items-center">
+
+                            <div class="kpi-icon kpi-green">
+                                <i class="bi bi-clock"></i>
+                            </div>
+
+                            <div class="ms-3">
+
+                                <small class="text-muted">
+                                    Disponibilité
+                                </small>
+
+                                <h3 class="mb-0">
+                                    {{ availability }}
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- TRAFFIC + ETAT -->
+            <!-- ================================================= -->
+
+            <div class="row g-3 mb-4">
+
+
+                <!-- TRAFFIC -->
+
+                <div class="col-lg-8">
+
+                    <div class="card p-4 h-100">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <h5 class="mb-0">
+                                Évolution du trafic réseau
+                            </h5>
+
+                            <span class="badge text-bg-light">
+                                24h
+                            </span>
+
+                        </div>
+
+                        <canvas id="trafficChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- DONUT -->
+
+                <div class="col-lg-4">
+
+                    <div class="card p-4 h-100">
+
+                        <h5>
+                            État des agences
+                        </h5>
+
+                        <canvas id="agencyChart"></canvas>
+
+                        <div class="mt-3">
+
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="bi bi-circle-fill text-success"></i>
+                                    En ligne
+                                </span>
+
+                                <strong>
+                                    {{ online_agencies }}
+                                </strong>
+                            </div>
+
+
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="bi bi-circle-fill text-danger"></i>
+                                    Anomalie
+                                </span>
+
+                                <strong>
+                                    {{ anomaly_agencies }}
+                                </strong>
+                            </div>
+
+
+                            <div class="d-flex justify-content-between">
+                                <span>
+                                    <i class="bi bi-circle-fill text-secondary"></i>
+                                    Hors ligne
+                                </span>
+
+                                <strong>
+                                    0
+                                </strong>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- MAP + ALERTES -->
+            <!-- ================================================= -->
+
+            <div class="row g-3 mb-4">
+
+
+                <!-- MAP -->
+
+                <div class="col-lg-7">
+
+                    <div class="card p-4">
+
+                        <div class="d-flex justify-content-between mb-3">
+
+                            <h5 class="mb-0">
+                                Carte du réseau
+                            </h5>
+
+                            <a
+                                href="{% url 'carte_reseau' %}"
+                                class="btn btn-sm btn-outline-primary">
+
+                                Voir la carte
+
+                            </a>
+
+                        </div>
+
+                        <div id="map"></div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ALERTES -->
+
+                <div class="col-lg-5">
+
+                    <div class="card p-4">
+
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+
+                            <h5 class="mb-0">
+                                Alertes récentes
+                            </h5>
+
+                            <a href="{% url 'alertes' %}">
+                                Voir toutes
+                            </a>
+
+                        </div>
+
+
+                        <div class="table-responsive">
+
+                            <table class="table table-hover align-middle">
+
+                                <thead>
+
+                                    <tr>
+
+                                        <th>Agence</th>
+                                        <th>Type</th>
+                                        <th>Sévérité</th>
+
+                                    </tr>
+
+                                </thead>
+
+
+                                <tbody>
+
+                                    {% for alert in alerts %}
+
+                                    <tr>
+
+                                        <td>
+                                            {{ alert.agence.nom }}
+                                        </td>
+
+                                        <td>
+                                            {{ alert.type_alerte }}
+                                        </td>
+
+                                        <td>
+
+                                            {% if alert.severite == "Haute" %}
+
+                                                <span class="badge text-bg-danger">
+                                                    Haute
+                                                </span>
+
+                                            {% elif alert.severite == "Moyenne" %}
+
+                                                <span class="badge text-bg-warning">
+                                                    Moyenne
+                                                </span>
+
+                                            {% else %}
+
+                                                <span class="badge text-bg-secondary">
+                                                    {{ alert.severite }}
+                                                </span>
+
+                                            {% endif %}
+
+                                        </td>
+
+                                    </tr>
+
+                                    {% empty %}
+
+                                    <tr>
+
+                                        <td colspan="3"
+                                            class="text-center text-muted">
+
+                                            Aucune alerte récente.
+
+                                        </td>
+
+                                    </tr>
+
+                                    {% endfor %}
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- PERFORMANCES -->
+            <!-- ================================================= -->
+
+            <div class="card p-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+
+                    <h5 class="mb-0">
+                        Performances des agences
+                    </h5>
+
+                    <a
+                        href="{% url 'agences' %}"
+                        class="btn btn-sm btn-outline-primary">
+
+                        Voir toutes
+
+                    </a>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Agence</th>
+                                <th>Latence</th>
+                                <th>Perte</th>
+                                <th>Débit</th>
+                                <th>Statut</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for agence in agencies %}
+
+                            <tr>
+
+                                <td class="fw-semibold">
+                                    {{ agence.nom }}
+                                </td>
+
+                                <td>
+                                    {{ agence.latence }} ms
+                                </td>
+
+                                <td>
+                                    {{ agence.perte_paquets }} %
+                                </td>
+
+                                <td>
+                                    {{ agence.bande_passante }} Mbps
+                                </td>
+
+                                <td>
+
+                                    {% if agence.statut == "Anomalie" %}
+
+                                        <span class="status-anomaly">
+                                            ● Anomalie
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="status-online">
+                                            ● En ligne
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                            </tr>
+
+                            {% empty %}
+
+                            <tr>
+
+                                <td colspan="5"
+                                    class="text-center">
+
+                                    Aucune agence enregistrée.
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </main>
+
+    </div>
+
+</div>
+
+
+<!-- Chart.js -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js">
+</script>
+
+
+<!-- Leaflet -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
+
+
+<script>
+
+
+// =====================================================
+// TRAFFIC
+// =====================================================
+
+new Chart(
+    document.getElementById("trafficChart"),
+    {
+        type: "line",
+
+        data: {
+            labels: {{ traffic_labels|safe }},
+
+            datasets: [
+
+                {
+                    label: "Téléchargement",
+                    data: {{ download_data|safe }},
+                    borderWidth: 2,
+                    tension: 0.35,
+                    fill: true
+                },
+
+                {
+                    label: "Envoi",
+                    data: {{ upload_data|safe }},
+                    borderWidth: 2,
+                    tension: 0.35,
+                    fill: true
+                }
+
+            ]
+        },
+
+        options: {
+            responsive: true,
+
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    }
+);
+
+
+// =====================================================
+// DONUT
+// =====================================================
+
+new Chart(
+    document.getElementById("agencyChart"),
+    {
+        type: "doughnut",
+
+        data: {
+
+            labels: [
+                "En ligne",
+                "Anomalie",
+                "Hors ligne"
+            ],
+
+            datasets: [
+                {
+                    data: [
+                        {{ online_agencies }},
+                        {{ anomaly_agencies }},
+                        0
+                    ],
+
+                    borderWidth: 0
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+            cutout: "70%",
+
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    }
+);
+
+
+// =====================================================
+// MAP
+// =====================================================
+
+const map = L.map("map").setView(
+    [31.8, -6.0],
+    5
+);
+setTimeout(
+    () => {
+        map.invalidateSize();
+    },
+    200
+);
+
+L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
+    {
+        attribution: "Tiles © Esri"
+    }
+).addTo(map);
+
+
+// =====================================================
+// AGENCES
+// =====================================================
+
+const agenciesMap = [
+
+    {
+        name: "Tanger",
+        position: [35.76, -5.83],
+        status: "En ligne"
+    },
+
+    {
+        name: "Rabat",
+        position: [34.02, -6.84],
+        status: "En ligne"
+    },
+
+    {
+        name: "Casablanca",
+        position: [33.57, -7.59],
+        status: "Anomalie"
+    },
+
+    {
+        name: "Fès",
+        position: [34.03, -5],
+        status: "Anomalie"
+    },
+
+    {
+        name: "Marrakech",
+        position: [31.63, -8],
+        status: "En ligne"
+    },
+
+    {
+        name: "Agadir",
+        position: [30.42, -9.6],
+        status: "En ligne"
+    }
+
+];
+
+
+agenciesMap.forEach(
+    agency => {
+
+        L.marker(agency.position)
+            .addTo(map)
+            .bindPopup(
+                `<b>${agency.name}</b><br>
+                 État : ${agency.status}`
+            );
+
+    }
+);
+
+</script>
+
+
+
+{% endblock %}
